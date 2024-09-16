@@ -1,0 +1,60 @@
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import HeadBar from "../HeadBar";
+import SideBar from "../SideBar";
+import { useNavigate, useParams } from "react-router-dom";
+import TreatmentForm from "./TreatmentForm";
+import { useSelector } from "react-redux";
+import TreatmentFormDocPay from "./TreatmentFormDocPay";
+
+const TreatmentDashTwo = () => {
+  const { exid, appoint_id, tp_id } = useParams();
+  const navigate = useNavigate();
+  const branchData = useSelector((state) => state.branch.currentBranch);
+  console.log(branchData);
+
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // Push a new state to ensure the user stays on the current page
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    // Listen for popstate events
+    window.addEventListener("popstate", handlePopState);
+
+    // Push the initial state
+    window.history.pushState(null, "", window.location.href);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  return (
+    <>
+      <Wrapper>
+        <HeadBar />
+
+        <div className="main">
+          <div className="container-fluid">
+            <div className="row flex-nowrap">
+              <div className="col-lg-1 col-1 p-0">
+                <SideBar />
+              </div>
+              <div className="col-lg-11 col-11 ps-0 m-0">
+                {branchData[0]?.doctor_payment === "Yes" ? (
+                  <TreatmentFormDocPay />
+                ) : (
+                  <TreatmentForm />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Wrapper>
+    </>
+  );
+};
+
+export default TreatmentDashTwo;
+const Wrapper = styled.div``;
